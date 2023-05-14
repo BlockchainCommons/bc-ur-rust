@@ -20,7 +20,7 @@ impl UR {
     }
 
     /// Creates a new UR from the provided UR string.
-    pub fn new_from_ur_string<T: Into<String>>(ur_string: T) -> Result<UR, Error> {
+    pub fn from_ur_string<T: Into<String>>(ur_string: T) -> Result<UR, Error> {
         let ur_string = ur_string.into();
         let strip_scheme = ur_string.strip_prefix("ur:").ok_or(Error::InvalidScheme)?;
         let (ur_type, _) = strip_scheme.split_once('/').ok_or(Error::TypeUnspecified)?;
@@ -78,7 +78,7 @@ mod tests {
         let ur = UR::new("test", &cbor).unwrap();
         let ur_string = ur.string();
         assert_eq!(ur_string, "ur:test/lsadaoaxjygonesw");
-        let ur = UR::new_from_ur_string(ur_string).unwrap();
+        let ur = UR::from_ur_string(ur_string).unwrap();
         assert_eq!(ur.ur_type, "test");
         assert_eq!(&ur.cbor, &cbor);
     }

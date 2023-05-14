@@ -66,7 +66,7 @@ mod tests {
         let ur = test.ur();
         let ur_string = ur.string();
         assert_eq!(ur_string, "ur:leaf/iejyihjkjygupyltla");
-        let test2 = Test::new_from_ur_string(ur_string).unwrap();
+        let test2 = Test::from_ur_string(ur_string).unwrap();
         assert_eq!(test.s, test2.s);
     }
 }

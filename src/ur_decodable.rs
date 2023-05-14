@@ -25,12 +25,12 @@ public extension URDecodable {
  */
 
 pub trait URDecodable: CBORTaggedDecodable {
-    fn new(ur: &UR) -> Result<Box<Self>, Error> {
+    fn from_ur(ur: &UR) -> Result<Box<Self>, Error> {
         ur.check_type(&Self::CBOR_TAG.name().as_ref().unwrap())?;
         Ok(Self::from_untagged_cbor(&ur.cbor).map_err(Error::CBOR)?)
     }
 
-    fn new_from_ur_string<T: Into<String>>(ur_string: T) -> Result<Box<Self>, Error> {
-        Self::new(&UR::new_from_ur_string(ur_string)?)
+    fn from_ur_string<T: Into<String>>(ur_string: T) -> Result<Box<Self>, Error> {
+        Self::from_ur(&UR::from_ur_string(ur_string)?)
     }
 }

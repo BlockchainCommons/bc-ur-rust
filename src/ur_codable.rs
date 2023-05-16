@@ -4,6 +4,8 @@ pub trait URCodable: UREncodable + URDecodable {}
 
 #[cfg(test)]
 mod tests {
+    use std::rc::Rc;
+
     use dcbor::{CBOR, Tag, CBOREncodable, CBORTaggedEncodable, CBORDecodable, CBORError, CBORTaggedDecodable, CBORTagged};
 
     use super::*;
@@ -19,7 +21,7 @@ mod tests {
     }
 
     impl CBORTagged for Test {
-        const CBOR_TAG: Tag = dcbor::Tag::new_with_static_name(24, "leaf");
+        const CBOR_TAG: Tag = Tag::new_with_static_name(24, "leaf");
     }
 
     impl CBOREncodable for Test {
@@ -43,7 +45,7 @@ mod tests {
     impl CBORDecodable for Test {
         // This ensures that asking for the CBOR for this type will always
         // expect a tagged CBOR value.
-        fn from_cbor(cbor: &CBOR) -> Result<Box<Self>, CBORError> {
+        fn from_cbor(cbor: &CBOR) -> Result<Rc<Self>, CBORError> {
             Self::from_tagged_cbor(cbor)
         }
     }
@@ -51,8 +53,8 @@ mod tests {
     impl CBORTaggedDecodable for Test {
         // This is the core of the CBOR decoding for this type. It is the
         // untagged CBOR decoding.
-        fn from_untagged_cbor(cbor: &CBOR) -> Result<Box<Self>, CBORError> {
-            Ok(Box::new(Self::new(&String::from_cbor(cbor)?)))
+        fn from_untagged_cbor(cbor: &CBOR) -> Result<Rc<Self>, CBORError> {
+            Ok(Rc::new(Self::new(&String::from_cbor(cbor)?)))
         }
     }
 

@@ -31,7 +31,7 @@ impl UR {
         if kind != ur::ur::Kind::SinglePart {
             return Err(Error::NotSinglePart);
         }
-        let cbor = CBOR::from_data(&data).map_err(Error::CBOR)?;
+        let cbor = CBOR::from_data(&data).map_err(Error::Cbor)?;
         Ok(UR { ur_type: ur_type.to_string(), cbor })
     }
 

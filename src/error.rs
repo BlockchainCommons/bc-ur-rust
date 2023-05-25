@@ -3,7 +3,7 @@ pub enum Error {
     // UR Decoder Error
     UR(ur::ur::Error),
     // CBOR Error
-    CBOR(dcbor::CBORError),
+    Cbor(dcbor::CBORError),
     /// Invalid scheme.
     InvalidScheme,
     /// No type specified.

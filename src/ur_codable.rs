@@ -6,7 +6,7 @@ pub trait URCodable: UREncodable + URDecodable {}
 mod tests {
     use std::rc::Rc;
 
-    use dcbor::{CBOR, Tag, CBOREncodable, CBORTaggedEncodable, CBORDecodable, CBORError, CBORTaggedDecodable, CBORTagged};
+    use dcbor::{CBOR, Tag, CBOREncodable, CBORTaggedEncodable, CBORDecodable, Error as CBORError, CBORTaggedDecodable, CBORTagged};
 
     use super::*;
 

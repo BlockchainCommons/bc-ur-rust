@@ -8,6 +8,12 @@
 
 ## Introduction
 
+[Uniform Resources (URs)](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-005-ur.md) are URI-encoded [CBOR](https://cbor.io) structures developed by [Blockchain Commons](https://blockchaincommons.com). This crate is an opinionated wrapper around the [ur](https://crates.io/crates/ur) crate by [Dominik Spicher](https://github.com/dspicher), and is intended primarily for use in higher-level Blockchain Commmons projects like [Gordian Envelope](https://crates.io/crates/bc-envelope).
+
+It is a requirement of the UR specification that the CBOR encoded as URs conform to Gordian dCBOR, which is a deterministic profile of CBOR currently specified in [this IETF Internet Draft](https://datatracker.ietf.org/doc/draft-mcnally-deterministic-cbor/). The dependency `dcbor` crate can be used directly for that purpose. This crate provides the traits `UREncodable`, `URDecodable`, and `URCodable` that are built on traits from the `dcbor` crate such as `CBORTaggedEncodable` and `CBORTaggedDecodable`. It is strongly recommended that adopters of URs implement these traits for their types.
+
+This crate does not currenly provide opinionated affordances for multi-part URs using fountain codes, but the dependency `ur` crate can be used directly for that purpose.
+
 ## Getting Started
 
 ```toml
@@ -17,18 +23,24 @@ bc-ur = "0.1.0"
 
 ## Specification
 
+The primary specification for URs is [BCR-2020-005: Uniform Resources](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-005-ur.md) and the Swift implementation [URKit](https://github.com/BlockchainCommons/URKit).
 
 ## Related Projects
 
+Higher-level Blockchain Commons projects that use this crate include:
+
+* [Secure Components](https://crates.io/crates/bc-components)
+* [Gordian Envelope](https://crates.io/crates/bc-envelope)
 
 ## Status - Alpha
 
+`bc-ur` is currently under active development and in the alpha testing phase. It should not be used for production tasks until it has had further testing and auditing. See [Blockchain Commons' Development Phases](https://github.com/BlockchainCommons/Community/blob/master/release-path.md).
 
 ## Financial Support
 
-`dcbor` is a project of [Blockchain Commons](https://www.blockchaincommons.com/). We are proudly a "not-for-profit" social benefit corporation committed to open source & open development. Our work is funded entirely by donations and collaborative partnerships with people like you. Every contribution will be spent on building open tools, technologies, and techniques that sustain and advance blockchain and internet security infrastructure and promote an open web.
+`bc-ur` is a project of [Blockchain Commons](https://www.blockchaincommons.com/). We are proudly a "not-for-profit" social benefit corporation committed to open source & open development. Our work is funded entirely by donations and collaborative partnerships with people like you. Every contribution will be spent on building open tools, technologies, and techniques that sustain and advance blockchain and internet security infrastructure and promote an open web.
 
-To financially support further development of `dcbor` and other projects, please consider becoming a Patron of Blockchain Commons through ongoing monthly patronage as a [GitHub Sponsor](https://github.com/sponsors/BlockchainCommons). You can also support Blockchain Commons with bitcoins at our [BTCPay Server](https://btcpay.blockchaincommons.com/).
+To financially support further development of `bc-ur` and other projects, please consider becoming a Patron of Blockchain Commons through ongoing monthly patronage as a [GitHub Sponsor](https://github.com/sponsors/BlockchainCommons). You can also support Blockchain Commons with bitcoins at our [BTCPay Server](https://btcpay.blockchaincommons.com/).
 
 ## Contributing
 

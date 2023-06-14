@@ -2,6 +2,7 @@ use dcbor::{CBOR, CBOREncodable};
 use ur::decode;
 use crate::{utils::URTypeString, error::Error};
 
+/// A Uniform Resource (UR) is a URI-encoded CBOR object.
 #[derive(Debug, Clone, PartialEq)]
 pub struct UR {
     pub ur_type: String,

@@ -2,6 +2,7 @@ use crate::{ur::UR, error::Error};
 
 use dcbor::CBORTaggedDecodable;
 
+/// A type that can be decoded from a UR.
 pub trait URDecodable: CBORTaggedDecodable {
     fn from_ur(ur: &UR) -> Result<Self, Error> where Self: Sized {
         ur.check_type(Self::CBOR_TAG.name().as_ref().unwrap())?;

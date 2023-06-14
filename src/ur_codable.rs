@@ -1,5 +1,6 @@
 use crate::{UREncodable, URDecodable};
 
+/// A type that can be encoded to and decoded from a UR.
 pub trait URCodable: UREncodable + URDecodable {}
 
 #[cfg(test)]

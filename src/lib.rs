@@ -1,6 +1,78 @@
 #![doc(html_root_url = "https://docs.rs/bc-ur/0.1.0")]
 #![warn(rust_2018_idioms)]
 
+//! # Blockchain Commons Uniform Resources ("UR") for Rust
+//!
+//! [Uniform Resources
+//! (URs)](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-005-ur.md)
+//! are URI-encoded [CBOR](https://cbor.io) structures developed by [Blockchain
+//! Commons](https://blockchaincommons.com). This crate is an opinionated
+//! wrapper around the [ur](https://crates.io/crates/ur) crate by [Dominik
+//! Spicher](https://github.com/dspicher), and is intended primarily for use in
+//! higher-level Blockchain Commmons projects like [Gordian
+//! Envelope](https://crates.io/crates/bc-envelope).
+//!
+//! It is a requirement of the UR specification that the CBOR encoded as URs
+//! conform to Gordian dCBOR, which is a deterministic profile of CBOR currently
+//! specified in [this IETF Internet
+//! Draft](https://datatracker.ietf.org/doc/draft-mcnally-deterministic-cbor/).
+//! The dependency `dcbor` crate can be used directly for that purpose. This
+//! crate provides the traits `UREncodable`, `URDecodable`, and `URCodable` that
+//! are built on traits from the `dcbor` crate such as `CBORTaggedEncodable` and
+//! `CBORTaggedDecodable`. It is strongly recommended that adopters of URs
+//! implement these traits for their types.
+//!
+//! This crate does not currenly provide opinionated affordances for multi-part
+//! URs using fountain codes, but the dependency `ur` crate can be used directly
+//! for that purpose.
+//!
+//! # Getting Started
+//!
+//! Add the following to your `Cargo.toml`:
+//!
+//! ```toml
+//! [dependencies]
+//! bc-ur = "0.1.0"
+//! ```
+//!
+//! # Specification
+//!
+//! The primary specification for URs is [BCR-2020-005:
+//! Uniform Resources](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-005-ur.md)
+//! and the Swift implementation [URKit](https://github.com/BlockchainCommons/URKit).
+//!
+//! # Usage
+//!
+//! Encode a CBOR structure as a UR.
+//!
+//! ```
+//! # fn main() {
+//! # {
+//! use dcbor::*;
+//! use bc_ur::*;
+//! let cbor = vec![1, 2, 3].cbor();
+//! let ur = UR::new("test", &cbor).unwrap();
+//! let ur_string = ur.string();
+//! assert_eq!(ur_string, "ur:test/lsadaoaxjygonesw");
+//! # }
+//! # }
+//! ```
+//!
+//! Decode a UR back to a CBOR structure.
+//!
+//! ```
+//! # fn main() {
+//! # {
+//! use dcbor::*;
+//! use bc_ur::*;
+//! let ur_string = "ur:test/lsadaoaxjygonesw";
+//! let ur = UR::from_ur_string(ur_string).unwrap();
+//! assert_eq!(ur.ur_type, "test");
+//! assert_eq!(&ur.cbor, &vec![1, 2, 3].cbor());
+//! # }
+//! # }
+//! ```
+
 mod ur;
 pub use crate::ur::UR;
 
@@ -26,5 +98,27 @@ mod tests {
     #[test]
     fn test_html_root_url() {
         version_sync::assert_html_root_url_updated!("src/lib.rs");
+    }
+}
+
+#[cfg(test)]
+mod example_tests {
+    use dcbor::*;
+    use crate::*;
+
+    #[test]
+    fn encode() {
+        let cbor = vec![1, 2, 3].cbor();
+        let ur = UR::new("test", &cbor).unwrap();
+        let ur_string = ur.string();
+        assert_eq!(ur_string, "ur:test/lsadaoaxjygonesw");
+    }
+
+    #[test]
+    fn decode() {
+        let ur_string = "ur:test/lsadaoaxjygonesw";
+        let ur = UR::from_ur_string(ur_string).unwrap();
+        assert_eq!(ur.ur_type, "test");
+        assert_eq!(&ur.cbor, &vec![1, 2, 3].cbor());
     }
 }

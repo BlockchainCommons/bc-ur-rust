@@ -2,6 +2,7 @@ use crate::ur::UR;
 
 use dcbor::CBORTaggedEncodable;
 
+/// A type that can be encoded to a UR.
 pub trait UREncodable: CBORTaggedEncodable {
     /// Returns the UR representation of the object.
     fn ur(&self) -> UR {

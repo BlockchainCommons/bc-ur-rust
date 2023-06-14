@@ -14,3 +14,4 @@ documentation = "https://docs.rs/dcbor"
 [dependencies]
 ur = "0.3.0"
 dcbor = { path = "../bc-dcbor-rust" }
+version-sync = "0.9"

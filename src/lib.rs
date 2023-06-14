@@ -4,8 +4,8 @@
 mod ur;
 pub use crate::ur::UR;
 
-mod utils;
 mod error;
+mod utils;
 
 mod ur_encodable;
 pub use ur_encodable::UREncodable;
@@ -15,3 +15,16 @@ pub use ur_decodable::URDecodable;
 
 mod ur_codable;
 pub use ur_codable::URCodable;
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_readme_deps() {
+        version_sync::assert_markdown_deps_updated!("README.md");
+    }
+
+    #[test]
+    fn test_html_root_url() {
+        version_sync::assert_html_root_url_updated!("src/lib.rs");
+    }
+}

@@ -1,3 +1,6 @@
+#![doc(html_root_url = "https://docs.rs/bc-ur/0.1.0")]
+#![warn(rust_2018_idioms)]
+
 mod ur;
 pub use crate::ur::UR;
 

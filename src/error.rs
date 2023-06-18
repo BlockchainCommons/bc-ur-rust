@@ -32,3 +32,15 @@ impl std::fmt::Display for Error {
 }
 
 impl std::error::Error for Error {}
+
+impl From<ur::ur::Error> for Error {
+    fn from(err: ur::ur::Error) -> Self {
+        Error::UR(err)
+    }
+}
+
+impl From<dcbor::Error> for Error {
+    fn from(err: dcbor::Error) -> Self {
+        Error::Cbor(err)
+    }
+}

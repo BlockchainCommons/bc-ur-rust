@@ -1,6 +1,6 @@
 [package]
 name = "bc-ur"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 description = "Uniform Resources (UR) for Rust."
 authors = ["Blockchain Commons"]
@@ -13,7 +13,7 @@ documentation = "https://docs.rs/bc-ur"
 
 [dependencies]
 ur = "0.3.0"
-dcbor = "0.7.4"
+dcbor = "0.7.7"
 
 [dev-dependencies]
 version-sync = "0.9"

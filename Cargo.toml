@@ -12,8 +12,12 @@ categories = ["data-structures", "encoding"]
 documentation = "https://docs.rs/bc-ur"
 
 [dependencies]
+dcbor = { path = "../bc-dcbor-rust" }
+# dcbor = "0.8.1"
+
 ur = "0.3.0"
-dcbor = "0.8.1"
+thiserror = "1.0.48"
+anyhow = "1.0"
 
 [dev-dependencies]
 version-sync = "0.9"

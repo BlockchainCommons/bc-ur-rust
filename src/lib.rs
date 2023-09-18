@@ -77,6 +77,8 @@ mod ur;
 pub use crate::ur::UR;
 
 mod error;
+pub use error::URError as Error;
+
 mod utils;
 
 mod ur_encodable;

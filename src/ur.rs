@@ -1,6 +1,6 @@
 use dcbor::{CBOR, CBOREncodable};
 use ur::decode;
-use crate::{utils::URTypeString, error::Error};
+use crate::{utils::URTypeString, error::URError};
 
 /// A Uniform Resource (UR) is a URI-encoded CBOR object.
 #[derive(Debug, Clone, PartialEq)]
@@ -11,28 +11,29 @@ pub struct UR {
 
 impl UR {
     /// Creates a new UR from the provided type and CBOR.
-    pub fn new<T: Into<String>, C: CBOREncodable>(ur_type: T, cbor: &C) -> Result<UR, Error> {
+    pub fn new<T: Into<String>, C: CBOREncodable>(ur_type: T, cbor: &C) -> Result<UR, URError> {
         let ur_type = ur_type.into();
         if !ur_type.is_ur_type() {
-            return Err(Error::InvalidType);
+            return Err(URError::InvalidType);
         }
         let cbor = cbor.cbor();
         Ok(UR { ur_type, cbor })
     }
 
     /// Creates a new UR from the provided UR string.
-    pub fn from_ur_string<T: Into<String>>(ur_string: T) -> Result<UR, Error> {
+    pub fn from_ur_string<T: Into<String>>(ur_string: T) -> Result<UR, URError> {
         let ur_string = ur_string.into();
-        let strip_scheme = ur_string.strip_prefix("ur:").ok_or(Error::InvalidScheme)?;
-        let (ur_type, _) = strip_scheme.split_once('/').ok_or(Error::TypeUnspecified)?;
+        let strip_scheme = ur_string.strip_prefix("ur:").ok_or(URError::InvalidScheme)?;
+        let (ur_type, _) = strip_scheme.split_once('/').ok_or(URError::TypeUnspecified)?;
         if !ur_type.is_ur_type() {
-            return Err(Error::InvalidType);
+            return Err(URError::InvalidType);
         }
-        let (kind, data) = decode(&ur_string).map_err(Error::UR)?;
+        let a = decode(&ur_string);
+        let (kind, data) = a.map_err(URError::UR)?;
         if kind != ur::ur::Kind::SinglePart {
-            return Err(Error::NotSinglePart);
+            return Err(URError::NotSinglePart);
         }
-        let cbor = CBOR::from_data(&data).map_err(Error::Cbor)?;
+        let cbor = CBOR::from_data(&data).map_err(URError::Cbor)?;
         Ok(UR { ur_type: ur_type.to_string(), cbor })
     }
 
@@ -55,9 +56,9 @@ impl UR {
     }
 
     /// Checks the UR type against the provided type.
-    pub fn check_type(&self, ur_type: &str) -> Result<(), Error> {
+    pub fn check_type(&self, ur_type: &str) -> Result<(), URError> {
         if self.ur_type != ur_type {
-            return Err(Error::UnexpectedType);
+            return Err(URError::UnexpectedType(ur_type.to_string(), self.ur_type.clone()));
         }
         Ok(())
     }

@@ -5,7 +5,7 @@ pub trait URCodable: UREncodable + URDecodable {}
 
 #[cfg(test)]
 mod tests {
-    use dcbor::{CBOR, Tag, CBOREncodable, CBORTaggedEncodable, CBORDecodable, Error as CBORError, CBORTaggedDecodable, CBORTagged};
+    use dcbor::{CBOR, Tag, CBOREncodable, CBORTaggedEncodable, CBORDecodable, CBORTaggedDecodable, CBORTagged};
 
     use super::*;
 
@@ -44,7 +44,7 @@ mod tests {
     impl CBORDecodable for Test {
         // This ensures that asking for the CBOR for this type will always
         // expect a tagged CBOR value.
-        fn from_cbor(cbor: &CBOR) -> Result<Self, CBORError> {
+        fn from_cbor(cbor: &CBOR) -> anyhow::Result<Self> {
             Self::from_tagged_cbor(cbor)
         }
     }
@@ -52,7 +52,7 @@ mod tests {
     impl CBORTaggedDecodable for Test {
         // This is the core of the CBOR decoding for this type. It is the
         // untagged CBOR decoding.
-        fn from_untagged_cbor(cbor: &CBOR) -> Result<Self, CBORError> {
+        fn from_untagged_cbor(cbor: &CBOR) -> anyhow::Result<Self> {
             Ok(Self::new(&String::from_cbor(cbor)?))
         }
     }

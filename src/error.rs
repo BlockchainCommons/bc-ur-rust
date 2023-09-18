@@ -1,46 +1,31 @@
-#[derive(Debug)]
-pub enum Error {
-    // UR Decoder Error
+use thiserror::Error;
+
+#[derive(Debug, Error)]
+pub enum URError {
+    #[error("UR decoder error ({0})")]
     UR(ur::ur::Error),
-    // CBOR Error
-    Cbor(dcbor::Error),
-    /// Invalid scheme.
+    #[error("CBOR error ({0})")]
+    Cbor(dcbor::CBORError),
+    #[error("invalid UR scheme")]
     InvalidScheme,
-    /// No type specified.
+    #[error("no UR type specified")]
     TypeUnspecified,
-    /// Invalid UR type.
+    #[error("invalid UR type")]
     InvalidType,
-    /// Not single-part.
+    #[error("UR is not a single-part")]
     NotSinglePart,
-    /// Unexpected UR type.
-    UnexpectedType,
+    #[error("expected UR type {0}, but found {1}")]
+    UnexpectedType(String, String),
 }
 
-impl std::fmt::Display for Error {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let s = match self {
-            Error::UR(err) => format!("UR Decoder Error: {}", err),
-            Error::Cbor(err) => format!("CBOR Error: {}", err),
-            Error::InvalidScheme => "Invalid scheme".to_string(),
-            Error::TypeUnspecified => "No type specified".to_string(),
-            Error::InvalidType => "Invalid UR type".to_string(),
-            Error::NotSinglePart => "Not single-part".to_string(),
-            Error::UnexpectedType => "Unexpected UR type".to_string(),
-        };
-        f.write_str(&s)
-    }
-}
-
-impl std::error::Error for Error {}
-
-impl From<ur::ur::Error> for Error {
+impl From<ur::ur::Error> for URError {
     fn from(err: ur::ur::Error) -> Self {
-        Error::UR(err)
+        URError::UR(err)
     }
 }
 
-impl From<dcbor::Error> for Error {
-    fn from(err: dcbor::Error) -> Self {
-        Error::Cbor(err)
+impl From<dcbor::CBORError> for URError {
+    fn from(err: dcbor::CBORError) -> Self {
+        URError::Cbor(err)
     }
 }

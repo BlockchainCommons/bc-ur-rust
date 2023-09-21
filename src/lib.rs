@@ -48,8 +48,8 @@
 //! ```
 //! # fn main() {
 //! # {
-//! use dcbor::*;
-//! use bc_ur::*;
+//! use dcbor::preamble::*;
+//! use bc_ur::preamble::*;
 //! let cbor = vec![1, 2, 3].cbor();
 //! let ur = UR::new("test", &cbor).unwrap();
 //! let ur_string = ur.string();
@@ -63,8 +63,8 @@
 //! ```
 //! # fn main() {
 //! # {
-//! use dcbor::*;
-//! use bc_ur::*;
+//! use dcbor::preamble::*;
+//! use bc_ur::preamble::*;
 //! let ur_string = "ur:test/lsadaoaxjygonesw";
 //! let ur = UR::from_ur_string(ur_string).unwrap();
 //! assert_eq!(ur.ur_type(), "test");
@@ -107,7 +107,7 @@ mod tests {
 
 #[cfg(test)]
 mod example_tests {
-    use dcbor::*;
+    use dcbor::preamble::*;
     use crate::*;
 
     #[test]

@@ -5,8 +5,8 @@ use crate::{utils::URTypeString, error::URError};
 /// A Uniform Resource (UR) is a URI-encoded CBOR object.
 #[derive(Debug, Clone, PartialEq)]
 pub struct UR {
-    pub ur_type: String,
-    pub cbor: CBOR,
+    ur_type: String,
+    cbor: CBOR,
 }
 
 impl UR {
@@ -61,6 +61,16 @@ impl UR {
             return Err(URError::UnexpectedType(ur_type.to_string(), self.ur_type.clone()));
         }
         Ok(())
+    }
+
+    /// Returns the UR type.
+    pub fn ur_type(&self) -> &str {
+        &self.ur_type
+    }
+
+    /// Returns the CBOR.
+    pub fn cbor(&self) -> &CBOR {
+        &self.cbor
     }
 }
 

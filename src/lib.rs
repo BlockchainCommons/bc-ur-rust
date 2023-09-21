@@ -90,6 +90,8 @@ pub use ur_decodable::URDecodable;
 mod ur_codable;
 pub use ur_codable::URCodable;
 
+pub mod preamble;
+
 #[cfg(test)]
 mod tests {
     #[test]
@@ -120,7 +122,7 @@ mod example_tests {
     fn decode() {
         let ur_string = "ur:test/lsadaoaxjygonesw";
         let ur = UR::from_ur_string(ur_string).unwrap();
-        assert_eq!(ur.ur_type, "test");
-        assert_eq!(&ur.cbor, &vec![1, 2, 3].cbor());
+        assert_eq!(ur.ur_type(), "test");
+        assert_eq!(ur.cbor(), &vec![1, 2, 3].cbor());
     }
 }

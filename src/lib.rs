@@ -67,8 +67,8 @@
 //! use bc_ur::*;
 //! let ur_string = "ur:test/lsadaoaxjygonesw";
 //! let ur = UR::from_ur_string(ur_string).unwrap();
-//! assert_eq!(ur.ur_type, "test");
-//! assert_eq!(&ur.cbor, &vec![1, 2, 3].cbor());
+//! assert_eq!(ur.ur_type(), "test");
+//! assert_eq!(ur.cbor(), &vec![1, 2, 3].cbor());
 //! # }
 //! # }
 //! ```

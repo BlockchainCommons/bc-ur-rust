@@ -11,7 +11,7 @@ pub struct UR {
 
 impl UR {
     /// Creates a new UR from the provided type and CBOR.
-    pub fn new<T: Into<String>, C: CBOREncodable>(ur_type: T, cbor: &C) -> Result<UR, URError> {
+    pub fn new(ur_type: impl Into<String>, cbor: impl CBOREncodable) -> Result<UR, URError> {
         let ur_type = ur_type.into();
         if !ur_type.is_ur_type() {
             return Err(URError::InvalidType);
@@ -21,7 +21,7 @@ impl UR {
     }
 
     /// Creates a new UR from the provided UR string.
-    pub fn from_ur_string<T: Into<String>>(ur_string: T) -> Result<UR, URError> {
+    pub fn from_ur_string(ur_string: impl Into<String>) -> Result<UR, URError> {
         let ur_string = ur_string.into();
         let strip_scheme = ur_string.strip_prefix("ur:").ok_or(URError::InvalidScheme)?;
         let (ur_type, _) = strip_scheme.split_once('/').ok_or(URError::TypeUnspecified)?;

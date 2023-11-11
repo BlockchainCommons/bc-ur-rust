@@ -55,6 +55,14 @@ mod tests {
         }
     }
 
+    impl TryFrom<CBOR> for Test {
+        type Error = anyhow::Error;
+
+        fn try_from(cbor: CBOR) -> Result<Self, Self::Error> {
+            Self::from_cbor(&cbor)
+        }
+    }
+
     impl CBORTaggedDecodable for Test {
         // This is the core of the CBOR decoding for this type. It is the
         // untagged CBOR decoding.

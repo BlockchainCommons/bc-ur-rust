@@ -31,6 +31,12 @@ mod tests {
         }
     }
 
+    impl From<Test> for CBOR {
+        fn from(value: Test) -> Self {
+            value.cbor()
+        }
+    }
+
     impl CBORTaggedEncodable for Test {
         // This is the core of the CBOR encoding for this type. It is the
         // untagged CBOR encoding.

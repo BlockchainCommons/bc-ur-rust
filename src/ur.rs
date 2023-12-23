@@ -22,7 +22,7 @@ impl UR {
 
     /// Creates a new UR from the provided UR string.
     pub fn from_ur_string(ur_string: impl Into<String>) -> Result<UR, URError> {
-        let ur_string = ur_string.into();
+        let ur_string = ur_string.into().to_lowercase();
         let strip_scheme = ur_string.strip_prefix("ur:").ok_or(URError::InvalidScheme)?;
         let (ur_type, _) = strip_scheme.split_once('/').ok_or(URError::TypeUnspecified)?;
         if !ur_type.is_ur_type() {
@@ -91,6 +91,11 @@ mod tests {
         let ur_string = ur.string();
         assert_eq!(ur_string, "ur:test/lsadaoaxjygonesw");
         let ur = UR::from_ur_string(ur_string).unwrap();
+        assert_eq!(ur.ur_type, "test");
+        assert_eq!(&ur.cbor, &cbor);
+
+        let caps_ur_string = "UR:TEST/LSADAOAXJYGONESW";
+        let ur = UR::from_ur_string(caps_ur_string).unwrap();
         assert_eq!(ur.ur_type, "test");
         assert_eq!(&ur.cbor, &cbor);
     }

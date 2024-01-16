@@ -40,7 +40,7 @@ impl UR {
     /// Returns the String representation of the UR.
     pub fn string(&self) -> String {
         let data = self.cbor.cbor_data();
-        ur::encode(&data, &self.ur_type)
+        ur::encode(&data, &ur::Type::Custom(&self.ur_type))
     }
 
     /// Returns the String representation of the UR in uppercase,

@@ -15,7 +15,7 @@ documentation = "https://docs.rs/bc-ur"
 dcbor = "0.11"
 # dcbor = { path = "../dcbor" }
 
-ur = "0.3.0"
+ur = "0.4.1"
 thiserror = "1.0.48"
 anyhow = "1.0"
 

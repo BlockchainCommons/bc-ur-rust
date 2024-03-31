@@ -20,7 +20,9 @@ mod tests {
     }
 
     impl CBORTagged for Test {
-        const CBOR_TAG: Tag = Tag::new_with_static_name(24, "leaf");
+        fn cbor_tags() -> Vec<Tag> {
+            vec![Tag::new_with_name(24, "leaf")]
+        }
     }
 
     impl CBOREncodable for Test {

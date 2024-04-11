@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/bc-ur/0.3.0")]
+#![doc(html_root_url = "https://docs.rs/bc-ur/0.3.1")]
 #![warn(rust_2018_idioms)]
 
 //! # Blockchain Commons Uniform Resources ("UR") for Rust
@@ -32,7 +32,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! bc-ur = "0.3.0"
+//! bc-ur = "0.3.1"
 //! ```
 //!
 //! # Specification

@@ -50,8 +50,8 @@
 //! # {
 //! use dcbor::prelude::*;
 //! use bc_ur::prelude::*;
-//! let cbor = vec![1, 2, 3].cbor();
-//! let ur = UR::new("test", &cbor).unwrap();
+//! let cbor: CBOR = vec![1, 2, 3].into();
+//! let ur = UR::new("test", cbor).unwrap();
 //! let ur_string = ur.string();
 //! assert_eq!(ur_string, "ur:test/lsadaoaxjygonesw");
 //! # }
@@ -68,7 +68,9 @@
 //! let ur_string = "ur:test/lsadaoaxjygonesw";
 //! let ur = UR::from_ur_string(ur_string).unwrap();
 //! assert_eq!(ur.ur_type(), "test");
-//! assert_eq!(ur.cbor(), &vec![1, 2, 3].cbor());
+//! let ur_cbor: CBOR = ur.into();
+//! let array_cbor: CBOR = vec![1, 2, 3].into();
+//! assert_eq!(ur_cbor, array_cbor);
 //! # }
 //! # }
 //! ```
@@ -112,8 +114,8 @@ mod example_tests {
 
     #[test]
     fn encode() {
-        let cbor = vec![1, 2, 3].cbor();
-        let ur = UR::new("test", &cbor).unwrap();
+        let cbor: CBOR = vec![1, 2, 3].into();
+        let ur = UR::new("test", cbor).unwrap();
         let ur_string = ur.string();
         assert_eq!(ur_string, "ur:test/lsadaoaxjygonesw");
     }
@@ -123,6 +125,6 @@ mod example_tests {
         let ur_string = "ur:test/lsadaoaxjygonesw";
         let ur = UR::from_ur_string(ur_string).unwrap();
         assert_eq!(ur.ur_type(), "test");
-        assert_eq!(ur.cbor(), &vec![1, 2, 3].cbor());
+        assert_eq!(<UR as Into<CBOR>>::into(ur), <Vec<i32> as Into<CBOR>>::into(vec![1, 2, 3]));
     }
 }

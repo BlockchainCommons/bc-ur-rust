@@ -1,4 +1,4 @@
-use dcbor::{CBOR, CBOREncodable};
+use dcbor::CBOR;
 use ur::decode;
 use crate::{utils::URTypeString, error::URError};
 
@@ -11,12 +11,14 @@ pub struct UR {
 
 impl UR {
     /// Creates a new UR from the provided type and CBOR.
-    pub fn new(ur_type: impl Into<String>, cbor: impl CBOREncodable) -> Result<UR, URError> {
+    pub fn new<T: TryInto<CBOR>>(ur_type: impl Into<String>, cbor: T) -> anyhow::Result<UR>
+    where <T as TryInto<CBOR>>::Error: std::error::Error + Send + Sync + 'static
+    {
         let ur_type = ur_type.into();
         if !ur_type.is_ur_type() {
-            return Err(URError::InvalidType);
+            return Err(URError::InvalidType.into());
         }
-        let cbor = cbor.cbor();
+        let cbor = cbor.try_into()?;
         Ok(UR { ur_type, cbor })
     }
 
@@ -33,7 +35,7 @@ impl UR {
         if kind != ur::ur::Kind::SinglePart {
             return Err(URError::NotSinglePart);
         }
-        let cbor = CBOR::from_data(&data).map_err(URError::Cbor)?;
+        let cbor = CBOR::from_data(data).map_err(URError::Cbor)?;
         Ok(UR { ur_type: ur_type.to_string(), cbor })
     }
 
@@ -67,10 +69,25 @@ impl UR {
     pub fn ur_type(&self) -> &str {
         &self.ur_type
     }
+}
 
-    /// Returns the CBOR.
-    pub fn cbor(&self) -> &CBOR {
-        &self.cbor
+impl From<UR> for CBOR {
+    fn from(ur: UR) -> Self {
+        ur.cbor
+    }
+}
+
+impl From<UR> for String {
+    fn from(ur: UR) -> Self {
+        ur.string()
+    }
+}
+
+impl TryFrom<String> for UR {
+    type Error = URError;
+
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        UR::from_ur_string(value)
     }
 }
 
@@ -86,8 +103,8 @@ mod tests {
 
     #[test]
     fn test_ur() {
-        let cbor = vec![1, 2, 3].cbor();
-        let ur = UR::new("test", &cbor).unwrap();
+        let cbor: CBOR = vec![1, 2, 3].into();
+        let ur = UR::new("test", cbor.clone()).unwrap();
         let ur_string = ur.string();
         assert_eq!(ur_string, "ur:test/lsadaoaxjygonesw");
         let ur = UR::from_ur_string(ur_string).unwrap();

@@ -1,11 +1,13 @@
 use crate::{UREncodable, URDecodable};
 
 /// A type that can be encoded to and decoded from a UR.
-pub trait URCodable: UREncodable + URDecodable {}
+pub trait URCodable {}
+
+impl<T> URCodable for T where T: UREncodable + URDecodable { }
 
 #[cfg(test)]
 mod tests {
-    use dcbor::{CBOR, Tag, CBOREncodable, CBORTaggedEncodable, CBORDecodable, CBORTaggedDecodable, CBORTagged};
+    use dcbor::{CBOR, Tag, CBORTaggedEncodable, CBORTaggedDecodable, CBORTagged};
 
     use super::*;
 
@@ -25,17 +27,11 @@ mod tests {
         }
     }
 
-    impl CBOREncodable for Test {
+    impl From<Test> for CBOR {
         // This ensures that asking for the CBOR for this type will always
         // return a tagged CBOR value.
-        fn cbor(&self) -> CBOR {
-            self.tagged_cbor()
-        }
-    }
-
-    impl From<Test> for CBOR {
         fn from(value: Test) -> Self {
-            value.cbor()
+            value.tagged_cbor()
         }
     }
 
@@ -43,39 +39,28 @@ mod tests {
         // This is the core of the CBOR encoding for this type. It is the
         // untagged CBOR encoding.
         fn untagged_cbor(&self) -> CBOR {
-            self.s.cbor()
-        }
-    }
-
-    impl UREncodable for Test {}
-
-    impl CBORDecodable for Test {
-        // This ensures that asking for the CBOR for this type will always
-        // expect a tagged CBOR value.
-        fn from_cbor(cbor: &CBOR) -> anyhow::Result<Self> {
-            Self::from_tagged_cbor(cbor)
+            self.s.clone().into()
         }
     }
 
     impl TryFrom<CBOR> for Test {
         type Error = anyhow::Error;
 
+        // This ensures that asking for the CBOR for this type will always
+        // expect a tagged CBOR value.
         fn try_from(cbor: CBOR) -> Result<Self, Self::Error> {
-            Self::from_cbor(&cbor)
+            Self::from_tagged_cbor(cbor)
         }
     }
 
     impl CBORTaggedDecodable for Test {
         // This is the core of the CBOR decoding for this type. It is the
         // untagged CBOR decoding.
-        fn from_untagged_cbor(cbor: &CBOR) -> anyhow::Result<Self> {
-            Ok(Self::new(&String::from_cbor(cbor)?))
+        fn from_untagged_cbor(cbor: CBOR) -> anyhow::Result<Self> {
+            let s: String = cbor.try_into()?;
+            Ok(Self::new(&s))
         }
     }
-
-    impl URDecodable for Test {}
-
-    impl URCodable for Test {}
 
     #[test]
     fn test_ur_codable() {

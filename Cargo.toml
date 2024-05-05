@@ -12,8 +12,8 @@ categories = ["data-structures", "encoding"]
 documentation = "https://docs.rs/bc-ur"
 
 [dependencies]
-dcbor = "^0.13.0"
-# dcbor = { path = "../dcbor" }
+# dcbor = "^0.13.0"
+dcbor = { path = "../dcbor" }
 
 ur = "^0.4.1"
 thiserror = "^1.0.48"

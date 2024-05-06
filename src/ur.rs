@@ -97,6 +97,12 @@ impl std::fmt::Display for UR {
     }
 }
 
+impl AsRef<UR> for UR {
+    fn as_ref(&self) -> &UR {
+        self
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -23,19 +23,19 @@ impl UR {
     }
 
     /// Creates a new UR from the provided UR string.
-    pub fn from_ur_string(ur_string: impl Into<String>) -> Result<UR, URError> {
+    pub fn from_ur_string(ur_string: impl Into<String>) -> anyhow::Result<UR> {
         let ur_string = ur_string.into().to_lowercase();
         let strip_scheme = ur_string.strip_prefix("ur:").ok_or(URError::InvalidScheme)?;
         let (ur_type, _) = strip_scheme.split_once('/').ok_or(URError::TypeUnspecified)?;
         if !ur_type.is_ur_type() {
-            return Err(URError::InvalidType);
+            return Err(URError::InvalidType.into());
         }
         let a = decode(&ur_string);
         let (kind, data) = a.map_err(URError::UR)?;
         if kind != ur::ur::Kind::SinglePart {
-            return Err(URError::NotSinglePart);
+            return Err(URError::NotSinglePart.into());
         }
-        let cbor = CBOR::from_data(data).map_err(URError::Cbor)?;
+        let cbor = CBOR::from_data(data)?;
         Ok(UR { ur_type: ur_type.to_string(), cbor })
     }
 
@@ -84,9 +84,9 @@ impl From<UR> for String {
 }
 
 impl TryFrom<String> for UR {
-    type Error = URError;
+    type Error = anyhow::Error;
 
-    fn try_from(value: String) -> Result<Self, Self::Error> {
+    fn try_from(value: String) -> anyhow::Result<Self> {
         UR::from_ur_string(value)
     }
 }

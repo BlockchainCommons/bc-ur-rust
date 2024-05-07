@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/bc-ur/0.3.1")]
+#![doc(html_root_url = "https://docs.rs/bc-ur/0.4.0")]
 #![warn(rust_2018_idioms)]
 
 //! # Blockchain Commons Uniform Resources ("UR") for Rust
@@ -32,7 +32,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! bc-ur = "0.3.1"
+//! bc-ur = "0.4.0"
 //! ```
 //!
 //! # Specification
@@ -67,8 +67,8 @@
 //! use bc_ur::prelude::*;
 //! let ur_string = "ur:test/lsadaoaxjygonesw";
 //! let ur = UR::from_ur_string(ur_string).unwrap();
-//! assert_eq!(ur.ur_type(), "test");
-//! let ur_cbor: CBOR = ur.into();
+//! assert_eq!(ur.ur_type_str(), "test");
+//! let ur_cbor = ur.cbor();
 //! let array_cbor: CBOR = vec![1, 2, 3].into();
 //! assert_eq!(ur_cbor, array_cbor);
 //! # }
@@ -76,7 +76,10 @@
 //! ```
 
 mod ur;
-pub use crate::ur::UR;
+pub use ur::UR;
+
+mod ur_type;
+pub use ur_type::URType;
 
 mod error;
 pub use error::URError as Error;
@@ -124,7 +127,7 @@ mod example_tests {
     fn decode() {
         let ur_string = "ur:test/lsadaoaxjygonesw";
         let ur = UR::from_ur_string(ur_string).unwrap();
-        assert_eq!(ur.ur_type(), "test");
+        assert_eq!(ur.ur_type_str(), "test");
         assert_eq!(<UR as Into<CBOR>>::into(ur), <Vec<i32> as Into<CBOR>>::into(vec![1, 2, 3]));
     }
 }

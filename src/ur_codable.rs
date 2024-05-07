@@ -8,9 +8,11 @@ impl<T> URCodable for T where T: UREncodable + URDecodable { }
 #[cfg(test)]
 mod tests {
     use dcbor::{CBOR, Tag, CBORTaggedEncodable, CBORTaggedDecodable, CBORTagged};
+    use anyhow::{Error, Result};
 
     use super::*;
 
+    #[derive(Debug, PartialEq)]
     struct Test {
         s: String,
     }
@@ -44,11 +46,11 @@ mod tests {
     }
 
     impl TryFrom<CBOR> for Test {
-        type Error = anyhow::Error;
+        type Error = Error;
 
         // This ensures that asking for the CBOR for this type will always
         // expect a tagged CBOR value.
-        fn try_from(cbor: CBOR) -> Result<Self, Self::Error> {
+        fn try_from(cbor: CBOR) -> Result<Self> {
             Self::from_tagged_cbor(cbor)
         }
     }
@@ -56,7 +58,7 @@ mod tests {
     impl CBORTaggedDecodable for Test {
         // This is the core of the CBOR decoding for this type. It is the
         // untagged CBOR decoding.
-        fn from_untagged_cbor(cbor: CBOR) -> anyhow::Result<Self> {
+        fn from_untagged_cbor(cbor: CBOR) -> Result<Self> {
             let s: String = cbor.try_into()?;
             Ok(Self::new(&s))
         }

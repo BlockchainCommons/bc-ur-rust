@@ -77,6 +77,7 @@
 
 mod ur;
 pub use ur::UR;
+pub mod bytewords;
 
 mod ur_type;
 pub use ur_type::URType;

@@ -96,6 +96,12 @@ pub use ur_decodable::URDecodable;
 mod ur_codable;
 pub use ur_codable::URCodable;
 
+mod multipart_decoder;
+pub use multipart_decoder::MultipartDecoder;
+
+mod multipart_encoder;
+pub use multipart_encoder::MultipartEncoder;
+
 pub mod prelude;
 
 #[cfg(test)]
@@ -130,5 +136,35 @@ mod example_tests {
         let ur = UR::from_ur_string(ur_string).unwrap();
         assert_eq!(ur.ur_type_str(), "test");
         assert_eq!(<UR as Into<CBOR>>::into(ur), <Vec<i32> as Into<CBOR>>::into(vec![1, 2, 3]));
+    }
+
+    fn run_fountain_test(start_part: usize) -> usize {
+        let message = "The only thing we have to fear is fear itself.";
+        let cbor = CBOR::to_byte_string(message.as_bytes());
+        let ur = UR::new("bytes", cbor).unwrap();
+
+        let mut encoder = MultipartEncoder::new(&ur, 10).unwrap();
+        let mut decoder = MultipartDecoder::new();
+        for _ in 0..1000 {
+            let part = encoder.next_part().unwrap();
+            if encoder.current_index() >= start_part {
+                // println!("{}", part);
+                decoder.receive(&part).unwrap();
+            }
+            if decoder.is_complete() {
+                break;
+            }
+        }
+        let received_ur = decoder.message().unwrap().unwrap();
+        assert_eq!(received_ur, ur);
+        encoder.current_index()
+    }
+
+    #[test]
+    fn test_fountain() {
+        assert_eq!(run_fountain_test(1), 5);
+        assert_eq!(run_fountain_test(51), 61);
+        assert_eq!(run_fountain_test(101), 110);
+        assert_eq!(run_fountain_test(501), 507);
     }
 }

@@ -5,4 +5,6 @@ pub use crate::{
     URDecodable,
     URCodable,
     bytewords,
+    MultipartEncoder,
+    MultipartDecoder,
 };

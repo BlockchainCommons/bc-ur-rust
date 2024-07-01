@@ -1,6 +1,6 @@
 [package]
 name = "bc-ur"
-version = "0.4.3"
+version = "0.5.0"
 edition = "2021"
 description = "Uniform Resources (UR) for Rust."
 authors = ["Blockchain Commons"]
@@ -12,7 +12,7 @@ categories = ["data-structures", "encoding"]
 documentation = "https://docs.rs/bc-ur"
 
 [dependencies]
-dcbor = "^0.14.0"
+dcbor = "^0.15.0"
 
 ur = "^0.4.1"
 thiserror = "^1.0.48"

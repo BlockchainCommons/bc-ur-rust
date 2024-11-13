@@ -6,7 +6,12 @@ use dcbor::CBORTaggedEncodable;
 pub trait UREncodable: CBORTaggedEncodable {
     /// Returns the UR representation of the object.
     fn ur(&self) -> UR {
-        UR::new(Self::cbor_tags()[0].name().as_ref().unwrap().clone(), self.untagged_cbor()).unwrap()
+        let tag = &Self::cbor_tags()[0];
+        if let Some(name) = tag.name().as_ref() {
+            UR::new(name.clone(), self.untagged_cbor()).unwrap()
+        } else {
+            panic!("CBOR tag {} must have a name", tag.value());
+        }
     }
 
     /// Returns the UR string representation of the object.

@@ -25,7 +25,7 @@ mod tests {
 
     impl CBORTagged for Test {
         fn cbor_tags() -> Vec<Tag> {
-            vec![Tag::new_with_name(24, "leaf")]
+            vec![Tag::new(24, "leaf")]
         }
     }
 

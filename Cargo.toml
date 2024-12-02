@@ -1,6 +1,6 @@
 [package]
 name = "bc-ur"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
 description = "Uniform Resources (UR) for Rust."
 authors = ["Blockchain Commons"]

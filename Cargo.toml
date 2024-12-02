@@ -12,7 +12,7 @@ categories = ["data-structures", "encoding"]
 documentation = "https://docs.rs/bc-ur"
 
 [dependencies]
-dcbor = "^0.15.0"
+dcbor = "^0.16.0"
 
 ur = "^0.4.1"
 thiserror = "^1.0.48"

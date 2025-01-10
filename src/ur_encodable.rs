@@ -10,7 +10,7 @@ pub trait UREncodable: CBORTaggedEncodable {
         if let Some(name) = tag.name().as_ref() {
             UR::new(name.clone(), self.untagged_cbor()).unwrap()
         } else {
-            panic!("CBOR tag {} must have a name", tag.value());
+            panic!("CBOR tag {} must have a name. Did you call `register_tags()`?", tag.value());
         }
     }
 

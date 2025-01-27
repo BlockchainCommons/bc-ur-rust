@@ -15,18 +15,6 @@ pub fn identifier(data: &[u8; 4]) -> String {
     words.join(" ")
 }
 
-// Example Bytemoji identifiers:
-// 💛 🚩 🐥 🫠
-// 🧵 💀 🎂 🛟
-// 💫 🤠 👆 😂
-// 🪐 👔 👚 👻
-// 🧸 🥚 🧀 🙀
-// 👃 👄 🐬 🧄
-// 🧦 🌽 🏠 🦆
-// 🌐 🌭 🥺 🛑
-// 🥁 🦞 🌹 🐢
-// 😽 😐 🐺 🌀
-
 /// Encodes a 4-byte slice of data as a string of bytemojis for identification
 /// purposes.
 #[must_use]
@@ -77,40 +65,7 @@ pub const BYTEWORDS: [&str; 256] = [
     "yoga", "yurt", "zaps", "zero", "zest", "zinc", "zone", "zoom",
 ];
 
-/*
-Selection criteria:
-- All code points are 3 or 4 UTF-8 bytes.
-    - Some emojis like 👁️‍🗨️ (“I am a witness”) are 17 UTF-8 bytes!
-- All single glyphs.
-    - Some emojis are sequences, like 👨🏿‍👩🏾‍👧🏽‍👦🏼 ("family: man, woman, girl, boy with various skin tones") in 28 bytes.
-- All emojis are visually distinct, with unique shapes and designs.
-- Avoid emojis that are highly similar or could be easily confused.
-- Avoid emojis that depend solely on color differences to be distinguished.
-- Exclude combining forms, skin tone modifiers, and gender modifiers.
-- Ensure the set covers a wide range of themes and concepts.
-- Prefer emojis with positive or neutral connotations.
-- Prefer emojis that render well at small sizes and on dark backgrounds.
-- Avoid national, ideological, and controversial symbols.
-
-Full list:
-😀😂😆😉🙄😋😎😍😘😭🫠🥱🤩😶🤨🫥
-🥵🥶😳🤪😵😡🤢😇🤠🤡🥳🥺😬🤑🙃🤯
-😈👹👺💀👻👽😺😹😻😽🙀😿🫶🤲🙌🤝
-👍👎👈👆💪👄🦷👂👃🧠👀🤚🦶🍎🍊🍋
-🍌🍉🍇🍓🫐🍒🍑🍍🥝🍆🥑🥦🍅🌽🥕🫒
-🧄🥐🥯🍞🧀🥚🍗🌭🍔🍟🍕🌮🥙🍱🍜🍤
-🍚🥠🍨🍦🎂🪴🌵🌱💐🍁🍄🌹🌺🌼🌻🌸
-💨🌊💧💦🌀🌈🌞🌝🌛🌜🌙🌎💫⭐🪐🌐
-💛💔💘💖💕🏁🚩💬💯🚫🔴🔷🟩🛑🔺🚗
-🚑🚒🚜🛵🚨🚀🚁🛟🚦🏰🎡🎢🎠🏠🔔🔑
-🚪🪑🎈💌📦📫📖📚📌🧮🔒💎📷⏰⏳📡
-💡💰🧲🧸🎁🎀🎉🪭👑🫖🔭🛁🏆🥁🎷🎺
-🏀🏈🎾🏓✨🔥💥👕👚👖🩳👗👔🧢👓🧶
-🧵💍👠👟🧦🧤👒👜🐱🐶🐭🐹🐰🦊🐻🐼
-🐨🐯🦁🐮🐷🐸🐵🐔🐥🦆🦉🐴🦄🐝🐛🦋
-🐌🐞🐢🐺🐍🪽🐙🦑🪼🦞🦀🐚🦭🐟🐬🐳
-*/
-
+/// See: https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2024-008-bytemoji.md
 pub const BYTEMOJIS: [&str; 256] = [
     "😀", "😂", "😆", "😉", "🙄", "😋", "😎", "😍",
     "😘", "😭", "🫠", "🥱", "🤩", "😶", "🤨", "🫥",

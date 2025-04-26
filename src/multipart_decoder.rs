@@ -1,19 +1,17 @@
-use ur::Decoder;
-use anyhow::{ Result, bail };
-use dcbor::prelude::*;
+use dcbor::CBOR;
 
-use crate::{ Error, URType, UR };
+use crate::{ URType, UR, Result, Error };
 
 pub struct MultipartDecoder {
     ur_type: Option<URType>,
-    decoder: Decoder,
+    decoder: ur::Decoder,
 }
 
 impl MultipartDecoder {
     pub fn new() -> Self {
         Self {
             ur_type: None,
-            decoder: Decoder::default(),
+            decoder: ur::Decoder::default(),
         }
     }
 }
@@ -29,7 +27,7 @@ impl MultipartDecoder {
         let decoded_type = Self::decode_type(value)?;
         if let Some(ur_type) = &self.ur_type {
             if ur_type != &decoded_type {
-                bail!(
+                return Err(
                     Error::UnexpectedType(
                         ur_type.string().to_string(),
                         decoded_type.string().to_string()
@@ -39,7 +37,7 @@ impl MultipartDecoder {
         } else {
             self.ur_type = Some(decoded_type);
         }
-        self.decoder.receive(value).map_err(|e| anyhow::Error::msg(e.to_string()))
+        Ok(self.decoder.receive(value)?)
     }
 
     pub fn is_complete(&self) -> bool {
@@ -47,7 +45,7 @@ impl MultipartDecoder {
     }
 
     pub fn message(&self) -> Result<Option<UR>> {
-        let message_data = self.decoder.message().map_err(|e| anyhow::Error::msg(e.to_string()))?;
+        let message_data = self.decoder.message()?;
         if let Some(data) = message_data {
             let cbor = CBOR::try_from_data(data)?;
             let ur_type = self.ur_type.as_ref().unwrap();

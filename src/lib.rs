@@ -83,9 +83,10 @@ mod ur_type;
 pub use ur_type::URType;
 
 mod error;
-pub use error::URError as Error;
+pub use error::{ Error, Result };
 
 mod utils;
+pub(crate) use utils::*;
 
 mod ur_encodable;
 pub use ur_encodable::UREncodable;

@@ -1,6 +1,4 @@
-use crate::{utils::URTypeString, error::URError};
-
-use anyhow::{Error, Result, bail};
+use crate::{ URTypeString, Error, Result };
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct URType(String);
@@ -10,7 +8,7 @@ impl URType {
     pub fn new(ur_type: impl Into<String>) -> Result<URType> {
         let ur_type = ur_type.into();
         if !ur_type.is_ur_type() {
-            bail!(URError::InvalidType);
+            return Err(Error::InvalidType);
         }
         Ok(URType(ur_type))
     }

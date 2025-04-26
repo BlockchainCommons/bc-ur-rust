@@ -1,7 +1,6 @@
 use dcbor::CBOR;
 use ur::decode;
-use crate::{error::URError, URType};
-use anyhow::{Error, Result, bail};
+use crate::{ Error, Result, URType };
 
 /// A Uniform Resource (UR) is a URI-encoded CBOR object.
 #[derive(Debug, Clone, PartialEq)]
@@ -12,8 +11,7 @@ pub struct UR {
 
 impl UR {
     /// Creates a new UR from the provided type and CBOR.
-    pub fn new(ur_type: impl TryInto<URType, Error = Error>, cbor: impl Into<CBOR>) -> Result<UR>
-    {
+    pub fn new(ur_type: impl TryInto<URType, Error = Error>, cbor: impl Into<CBOR>) -> Result<UR> {
         let ur_type = ur_type.try_into()?;
         let cbor = cbor.into();
         Ok(UR { ur_type, cbor })
@@ -22,13 +20,13 @@ impl UR {
     /// Creates a new UR from the provided UR string.
     pub fn from_ur_string(ur_string: impl Into<String>) -> Result<UR> {
         let ur_string = ur_string.into().to_lowercase();
-        let strip_scheme = ur_string.strip_prefix("ur:").ok_or(URError::InvalidScheme)?;
-        let (ur_type, _) = strip_scheme.split_once('/').ok_or(URError::TypeUnspecified)?;
+        let strip_scheme = ur_string.strip_prefix("ur:").ok_or(Error::InvalidScheme)?;
+        let (ur_type, _) = strip_scheme.split_once('/').ok_or(Error::TypeUnspecified)?;
         let ur_type = URType::new(ur_type)?;
         let a = decode(&ur_string);
-        let (kind, data) = a.map_err(URError::UR)?;
+        let (kind, data) = a.map_err(Error::UR)?;
         if kind != ur::ur::Kind::SinglePart {
-            bail!(URError::NotSinglePart);
+            return Err(Error::NotSinglePart);
         }
         let cbor = CBOR::try_from_data(data)?;
         Ok(UR { ur_type, cbor })
@@ -56,7 +54,12 @@ impl UR {
     pub fn check_type(&self, other_type: impl TryInto<URType, Error = Error>) -> Result<()> {
         let other_type = other_type.try_into()?;
         if self.ur_type != other_type {
-            Err(URError::UnexpectedType(other_type.string().to_string(), self.ur_type.string().to_string()))?;
+            Err(
+                Error::UnexpectedType(
+                    other_type.string().to_string(),
+                    self.ur_type.string().to_string()
+                )
+            )?;
         }
         Ok(())
     }

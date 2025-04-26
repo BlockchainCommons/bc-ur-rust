@@ -1,6 +1,8 @@
-pub use ur::bytewords::Style;
+use crate::Result;
 
-pub fn encode(data: impl AsRef<[u8]>, style: Style) -> String {
+pub use ur::bytewords;
+
+pub fn encode(data: impl AsRef<[u8]>, style: bytewords::Style) -> String {
     ur::bytewords::encode(data.as_ref(), style)
 }
 
@@ -26,8 +28,8 @@ pub fn bytemoji_identifier(data: &[u8; 4]) -> String {
     words.join(" ")
 }
 
-pub fn decode(data: &str, style: Style) -> Result<Vec<u8>, anyhow::Error> {
-    ur::bytewords::decode(data, style).map_err(|e| anyhow::anyhow!(e))
+pub fn decode(data: &str, style: bytewords::Style) -> Result<Vec<u8>> {
+    Ok(ur::bytewords::decode(data, style)?)
 }
 
 pub const BYTEWORDS: [&str; 256] = [

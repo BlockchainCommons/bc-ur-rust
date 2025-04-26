@@ -1,9 +1,9 @@
-use crate::{UREncodable, URDecodable};
+use crate::{ UREncodable, URDecodable };
 
 /// A type that can be encoded to and decoded from a UR.
 pub trait URCodable {}
 
-impl<T> URCodable for T where T: UREncodable + URDecodable { }
+impl<T> URCodable for T where T: UREncodable + URDecodable {}
 
 #[cfg(test)]
 mod tests {

@@ -20,4 +20,4 @@ pub trait UREncodable: CBORTaggedEncodable {
     }
 }
 
-impl<T> UREncodable for T where T: CBORTaggedEncodable { }
+impl<T> UREncodable for T where T: CBORTaggedEncodable {}

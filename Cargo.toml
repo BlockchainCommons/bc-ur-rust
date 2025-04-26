@@ -1,7 +1,7 @@
 [package]
 name = "bc-ur"
 version = "0.7.0"
-edition = "2021"
+edition = "2024"
 description = "Uniform Resources (UR) for Rust."
 authors = ["Blockchain Commons"]
 repository = "https://github.com/BlockchainCommons/bc-ur-rust"

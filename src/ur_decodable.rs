@@ -1,8 +1,6 @@
 use crate::ur::UR;
 
-use anyhow::Result;
-
-use dcbor::CBORTaggedDecodable;
+use dcbor::prelude::*;
 
 /// A type that can be decoded from a UR.
 pub trait URDecodable: CBORTaggedDecodable {

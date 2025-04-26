@@ -7,9 +7,7 @@ impl<T> URCodable for T where T: UREncodable + URDecodable { }
 
 #[cfg(test)]
 mod tests {
-    use dcbor::{CBOR, Tag, CBORTaggedEncodable, CBORTaggedDecodable, CBORTagged};
-    use anyhow::{Error, Result};
-
+    use dcbor::prelude::*;
     use super::*;
 
     #[derive(Debug, PartialEq)]

@@ -113,7 +113,7 @@ mod tests {
             let count = dict.entry(bytemoji).or_insert(0);
             *count += 1;
         }
-        let duplicates: Vec<_> = dict.iter().filter(|(_, &v)| v > 1).collect();
+        let duplicates: Vec<_> = dict.iter().filter(|(_, v)| *v > &1).collect();
         assert!(duplicates.is_empty(), "Duplicates: {:?}", duplicates);
     }
 

@@ -1,4 +1,4 @@
-use dcbor::CBOR;
+use dcbor::prelude::*;
 use ur::decode;
 use crate::{ Error, Result, URType };
 

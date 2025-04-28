@@ -44,11 +44,11 @@ mod tests {
     }
 
     impl TryFrom<CBOR> for Test {
-        type Error = Error;
+        type Error = dcbor::Error;
 
         // This ensures that asking for the CBOR for this type will always
         // expect a tagged CBOR value.
-        fn try_from(cbor: CBOR) -> Result<Self> {
+        fn try_from(cbor: CBOR) -> dcbor::Result<Self> {
             Self::from_tagged_cbor(cbor)
         }
     }
@@ -56,7 +56,7 @@ mod tests {
     impl CBORTaggedDecodable for Test {
         // This is the core of the CBOR decoding for this type. It is the
         // untagged CBOR decoding.
-        fn from_untagged_cbor(cbor: CBOR) -> Result<Self> {
+        fn from_untagged_cbor(cbor: CBOR) -> dcbor::Result<Self> {
             let s: String = cbor.try_into()?;
             Ok(Self::new(&s))
         }

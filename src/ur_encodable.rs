@@ -1,6 +1,6 @@
 use crate::ur::UR;
 
-use dcbor::CBORTaggedEncodable;
+use dcbor::prelude::*;
 
 /// A type that can be encoded to a UR.
 pub trait UREncodable: CBORTaggedEncodable {

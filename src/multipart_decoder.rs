@@ -1,4 +1,4 @@
-use dcbor::CBOR;
+use dcbor::prelude::*;
 
 use crate::{ URType, UR, Result, Error };
 

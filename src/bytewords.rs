@@ -1,8 +1,9 @@
 use crate::Result;
 
 pub use ur::bytewords;
+pub use bytewords::Style;
 
-pub fn encode(data: impl AsRef<[u8]>, style: bytewords::Style) -> String {
+pub fn encode(data: impl AsRef<[u8]>, style: Style) -> String {
     ur::bytewords::encode(data.as_ref(), style)
 }
 
@@ -28,7 +29,7 @@ pub fn bytemoji_identifier(data: &[u8; 4]) -> String {
     words.join(" ")
 }
 
-pub fn decode(data: &str, style: bytewords::Style) -> Result<Vec<u8>> {
+pub fn decode(data: &str, style: Style) -> Result<Vec<u8>> {
     Ok(ur::bytewords::decode(data, style)?)
 }
 

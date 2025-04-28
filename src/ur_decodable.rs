@@ -1,4 +1,4 @@
-use dcbor::CBORTaggedDecodable;
+use dcbor::prelude::*;
 
 use crate::UR;
 

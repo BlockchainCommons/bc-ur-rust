@@ -29,11 +29,17 @@ impl From<ur::ur::Error> for Error {
     }
 }
 
+impl From<Error> for String {
+    fn from(err: Error) -> Self {
+        err.to_string()
+    }
+}
+
 impl From<Error> for dcbor::Error {
     fn from(err: Error) -> Self {
         match err {
             Error::Cbor(err) => err,
-            _ => dcbor::Error::Custom(err.to_string()),
+            _ => dcbor::Error::msg(err),
         }
     }
 }

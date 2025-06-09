@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/bc-ur/0.9.0")]
+#![doc(html_root_url = "https://docs.rs/bc-ur/0.10.0")]
 #![warn(rust_2018_idioms)]
 
 //! # Blockchain Commons Uniform Resources ("UR") for Rust
@@ -32,7 +32,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! bc-ur = "0.9.0"
+//! bc-ur = "0.10.0"
 //! ```
 //!
 //! # Specification
@@ -48,8 +48,8 @@
 //! ```
 //! # fn main() {
 //! # {
-//! use dcbor::prelude::*;
 //! use bc_ur::prelude::*;
+//! use dcbor::prelude::*;
 //! let cbor: CBOR = vec![1, 2, 3].into();
 //! let ur = UR::new("test", cbor).unwrap();
 //! let ur_string = ur.string();
@@ -63,8 +63,8 @@
 //! ```
 //! # fn main() {
 //! # {
-//! use dcbor::prelude::*;
 //! use bc_ur::prelude::*;
+//! use dcbor::prelude::*;
 //! let ur_string = "ur:test/lsadaoaxjygonesw";
 //! let ur = UR::from_ur_string(ur_string).unwrap();
 //! assert_eq!(ur.ur_type_str(), "test");
@@ -84,7 +84,7 @@ mod ur_type;
 pub use ur_type::URType;
 
 mod error;
-pub use error::{ Error, Result };
+pub use error::{Error, Result};
 
 mod utils;
 pub(crate) use utils::*;
@@ -122,6 +122,7 @@ mod tests {
 #[cfg(test)]
 mod example_tests {
     use dcbor::prelude::*;
+
     use crate::*;
 
     #[test]
@@ -137,7 +138,10 @@ mod example_tests {
         let ur_string = "ur:test/lsadaoaxjygonesw";
         let ur = UR::from_ur_string(ur_string).unwrap();
         assert_eq!(ur.ur_type_str(), "test");
-        assert_eq!(<UR as Into<CBOR>>::into(ur), <Vec<i32> as Into<CBOR>>::into(vec![1, 2, 3]));
+        assert_eq!(
+            <UR as Into<CBOR>>::into(ur),
+            <Vec<i32> as Into<CBOR>>::into(vec![1, 2, 3])
+        );
     }
 
     fn run_fountain_test(start_part: usize) -> usize {

@@ -18,7 +18,7 @@ This crate does not currenly provide opinionated affordances for multi-part URs 
 
 ```toml
 [dependencies]
-bc-ur = "0.9.0"
+bc-ur = "0.10.0"
 ```
 
 ## Specification

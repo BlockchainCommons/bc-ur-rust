@@ -1,6 +1,6 @@
 [package]
 name = "bc-ur"
-version = "0.10.0"
+version = "0.11.0"
 edition = "2024"
 description = "Uniform Resources (UR) for Rust."
 authors = ["Blockchain Commons"]
@@ -18,7 +18,7 @@ keywords = [
 categories = ["data-structures", "encoding"] # https://crates.io/category_slugs
 
 [dependencies]
-dcbor = "^0.20.0"
+dcbor = "^0.21.0"
 
 ur = "^0.4.1"
 thiserror = "^1.0.48"

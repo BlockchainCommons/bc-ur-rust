@@ -1,6 +1,14 @@
 # Blockchain Commons Uniform Resources ("UR") for Rust
 
-<!--Guidelines: https://github.com/BlockchainCommons/secure-template/wiki -->
+<!--Guidelines: http| Wolf McNally      | Lead Researcher/Engineer | [@WolfMcNally](https://github.com/wolfmcnally)   | \<Wolf@WolfMcNally.com\>              | 9436 52EE 3844 1760 C3DC  3536 4B6C 2FCF 8947 80AE |
+
+## Version History
+
+### 0.12.0, July 3, 2025
+
+- Align to dependencies.
+
+## Responsible Disclosure/github.com/BlockchainCommons/secure-template/wiki -->
 
 ### _by Wolf McNally_
 
@@ -18,7 +26,7 @@ This crate does not currenly provide opinionated affordances for multi-part URs 
 
 ```toml
 [dependencies]
-bc-ur = "0.11.0"
+bc-ur = "0.12.0"
 ```
 
 ## Specification

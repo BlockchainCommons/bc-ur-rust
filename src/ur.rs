@@ -1,6 +1,7 @@
 use dcbor::prelude::*;
 use ur::decode;
-use crate::{ Error, Result, URType };
+
+use crate::{Error, Result, URType};
 
 /// A Uniform Resource (UR) is a URI-encoded CBOR object.
 #[derive(Debug, Clone, PartialEq)]
@@ -11,7 +12,10 @@ pub struct UR {
 
 impl UR {
     /// Creates a new UR from the provided type and CBOR.
-    pub fn new(ur_type: impl TryInto<URType, Error = Error>, cbor: impl Into<CBOR>) -> Result<UR> {
+    pub fn new(
+        ur_type: impl TryInto<URType, Error = Error>,
+        cbor: impl Into<CBOR>,
+    ) -> Result<UR> {
         let ur_type = ur_type.try_into()?;
         let cbor = cbor.into();
         Ok(UR { ur_type, cbor })
@@ -20,8 +24,10 @@ impl UR {
     /// Creates a new UR from the provided UR string.
     pub fn from_ur_string(ur_string: impl Into<String>) -> Result<UR> {
         let ur_string = ur_string.into().to_lowercase();
-        let strip_scheme = ur_string.strip_prefix("ur:").ok_or(Error::InvalidScheme)?;
-        let (ur_type, _) = strip_scheme.split_once('/').ok_or(Error::TypeUnspecified)?;
+        let strip_scheme =
+            ur_string.strip_prefix("ur:").ok_or(Error::InvalidScheme)?;
+        let (ur_type, _) =
+            strip_scheme.split_once('/').ok_or(Error::TypeUnspecified)?;
         let ur_type = URType::new(ur_type)?;
         let a = decode(&ur_string);
         let (kind, data) = a.map_err(Error::UR)?;
@@ -40,62 +46,47 @@ impl UR {
 
     /// Returns the String representation of the UR in uppercase,
     /// most-efficient for QR codes.
-    pub fn qr_string(&self) -> String {
-        self.string().to_uppercase()
-    }
+    pub fn qr_string(&self) -> String { self.string().to_uppercase() }
 
     /// Returns the data representation of the UR in uppercase,
     /// most-efficient for QR codes.
-    pub fn qr_data(&self) -> Vec<u8> {
-        self.qr_string().as_bytes().to_vec()
-    }
+    pub fn qr_data(&self) -> Vec<u8> { self.qr_string().as_bytes().to_vec() }
 
     /// Checks the UR type against the provided type.
-    pub fn check_type(&self, other_type: impl TryInto<URType, Error = Error>) -> Result<()> {
+    pub fn check_type(
+        &self,
+        other_type: impl TryInto<URType, Error = Error>,
+    ) -> Result<()> {
         let other_type = other_type.try_into()?;
         if self.ur_type != other_type {
-            Err(
-                Error::UnexpectedType(
-                    other_type.string().to_string(),
-                    self.ur_type.string().to_string()
-                )
-            )?;
+            Err(Error::UnexpectedType(
+                other_type.string().to_string(),
+                self.ur_type.string().to_string(),
+            ))?;
         }
         Ok(())
     }
 
-    pub fn ur_type(&self) -> &URType {
-        &self.ur_type
-    }
+    pub fn ur_type(&self) -> &URType { &self.ur_type }
 
     /// Returns the UR type.
-    pub fn ur_type_str(&self) -> &str {
-        self.ur_type.string()
-    }
+    pub fn ur_type_str(&self) -> &str { self.ur_type.string() }
 
-    pub fn cbor(&self) -> CBOR {
-        self.cbor.clone()
-    }
+    pub fn cbor(&self) -> CBOR { self.cbor.clone() }
 }
 
 impl From<UR> for CBOR {
-    fn from(ur: UR) -> Self {
-        ur.cbor
-    }
+    fn from(ur: UR) -> Self { ur.cbor }
 }
 
 impl From<UR> for String {
-    fn from(ur: UR) -> Self {
-        ur.string()
-    }
+    fn from(ur: UR) -> Self { ur.string() }
 }
 
 impl TryFrom<String> for UR {
     type Error = Error;
 
-    fn try_from(value: String) -> Result<Self> {
-        UR::from_ur_string(value)
-    }
+    fn try_from(value: String) -> Result<Self> { UR::from_ur_string(value) }
 }
 
 impl std::fmt::Display for UR {
@@ -105,9 +96,7 @@ impl std::fmt::Display for UR {
 }
 
 impl AsRef<UR> for UR {
-    fn as_ref(&self) -> &UR {
-        self
-    }
+    fn as_ref(&self) -> &UR { self }
 }
 
 #[cfg(test)]

@@ -1,4 +1,4 @@
-use crate::{ URTypeString, Error, Result };
+use crate::{Error, Result, URTypeString};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct URType(String);
@@ -14,23 +14,17 @@ impl URType {
     }
 
     /// Returns the String representation of the URType.
-    pub fn string(&self) -> &str {
-        &self.0
-    }
+    pub fn string(&self) -> &str { &self.0 }
 }
 
 impl TryFrom<String> for URType {
     type Error = Error;
 
-    fn try_from(value: String) -> Result<Self> {
-        URType::new(value)
-    }
+    fn try_from(value: String) -> Result<Self> { URType::new(value) }
 }
 
 impl TryFrom<&str> for URType {
     type Error = Error;
 
-    fn try_from(value: &str) -> Result<Self> {
-        URType::new(value)
-    }
+    fn try_from(value: &str) -> Result<Self> { URType::new(value) }
 }

@@ -1,4 +1,4 @@
-use crate::{ UR, Result };
+use crate::{Result, UR};
 
 pub struct MultipartEncoder<'a> {
     encoder: ur::Encoder<'a>,
@@ -10,7 +10,7 @@ impl<'a> MultipartEncoder<'a> {
             encoder: ur::Encoder::new(
                 &ur.cbor().to_cbor_data(),
                 max_fragment_len,
-                ur.ur_type_str()
+                ur.ur_type_str(),
             )?,
         })
     }
@@ -19,11 +19,7 @@ impl<'a> MultipartEncoder<'a> {
         Ok(self.encoder.next_part()?)
     }
 
-    pub fn current_index(&self) -> usize {
-        self.encoder.current_index()
-    }
+    pub fn current_index(&self) -> usize { self.encoder.current_index() }
 
-    pub fn parts_count(&self) -> usize {
-        self.encoder.fragment_count()
-    }
+    pub fn parts_count(&self) -> usize { self.encoder.fragment_count() }
 }

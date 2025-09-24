@@ -24,13 +24,9 @@ pub trait URTypeString {
 }
 
 impl URTypeString for &str {
-    fn is_ur_type(&self) -> bool {
-        self.chars().all(|c| c.is_ur_type())
-    }
+    fn is_ur_type(&self) -> bool { self.chars().all(|c| c.is_ur_type()) }
 }
 
 impl URTypeString for String {
-    fn is_ur_type(&self) -> bool {
-        self.as_str().is_ur_type()
-    }
+    fn is_ur_type(&self) -> bool { self.as_str().is_ur_type() }
 }

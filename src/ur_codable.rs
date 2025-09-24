@@ -1,4 +1,4 @@
-use crate::{ UREncodable, URDecodable };
+use crate::{URDecodable, UREncodable};
 
 /// A type that can be encoded to and decoded from a UR.
 pub trait URCodable {}
@@ -8,6 +8,7 @@ impl<T> URCodable for T where T: UREncodable + URDecodable {}
 #[cfg(test)]
 mod tests {
     use dcbor::prelude::*;
+
     use super::*;
 
     #[derive(Debug, PartialEq)]
@@ -16,31 +17,23 @@ mod tests {
     }
 
     impl Test {
-        fn new(s: &str) -> Self {
-            Self { s: s.to_string() }
-        }
+        fn new(s: &str) -> Self { Self { s: s.to_string() } }
     }
 
     impl CBORTagged for Test {
-        fn cbor_tags() -> Vec<Tag> {
-            vec![Tag::new(24, "leaf")]
-        }
+        fn cbor_tags() -> Vec<Tag> { vec![Tag::new(24, "leaf")] }
     }
 
     impl From<Test> for CBOR {
         // This ensures that asking for the CBOR for this type will always
         // return a tagged CBOR value.
-        fn from(value: Test) -> Self {
-            value.tagged_cbor()
-        }
+        fn from(value: Test) -> Self { value.tagged_cbor() }
     }
 
     impl CBORTaggedEncodable for Test {
         // This is the core of the CBOR encoding for this type. It is the
         // untagged CBOR encoding.
-        fn untagged_cbor(&self) -> CBOR {
-            self.s.clone().into()
-        }
+        fn untagged_cbor(&self) -> CBOR { self.s.clone().into() }
     }
 
     impl TryFrom<CBOR> for Test {

@@ -3,10 +3,10 @@ use thiserror::Error;
 #[derive(Debug, Error)]
 pub enum Error {
     #[error("UR decoder error ({0})")]
-    UR(ur::ur::Error),
+    UR(String),
 
     #[error("Bytewords error ({0})")]
-    Bytewords(#[from] ur::bytewords::Error),
+    Bytewords(String),
 
     #[error("CBOR error ({0})")]
     Cbor(#[from] dcbor::Error),
@@ -28,7 +28,13 @@ pub enum Error {
 }
 
 impl From<ur::ur::Error> for Error {
-    fn from(err: ur::ur::Error) -> Self { Error::UR(err) }
+    fn from(err: ur::ur::Error) -> Self { Error::UR(err.to_string()) }
+}
+
+impl From<ur::bytewords::Error> for Error {
+    fn from(err: ur::bytewords::Error) -> Self {
+        Error::Bytewords(err.to_string())
+    }
 }
 
 impl From<Error> for String {

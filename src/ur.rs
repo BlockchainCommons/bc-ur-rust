@@ -29,8 +29,7 @@ impl UR {
         let (ur_type, _) =
             strip_scheme.split_once('/').ok_or(Error::TypeUnspecified)?;
         let ur_type = URType::new(ur_type)?;
-        let a = decode(&ur_string);
-        let (kind, data) = a.map_err(Error::UR)?;
+        let (kind, data) = decode(&ur_string)?;
         if kind != ur::ur::Kind::SinglePart {
             return Err(Error::NotSinglePart);
         }

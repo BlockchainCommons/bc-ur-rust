@@ -18,7 +18,7 @@ This crate does not currenly provide opinionated affordances for multi-part URs 
 
 ```toml
 [dependencies]
-bc-ur = "0.18.0"
+bc-ur = "0.19.0"
 ```
 
 ## Specification
@@ -33,6 +33,10 @@ Higher-level Blockchain Commons projects that use this crate include:
 - [Gordian Envelope](https://crates.io/crates/bc-envelope)
 
 ## Version History
+
+### 0.19.0, December 18, 2025
+
+- Align to dependencies.
 
 ### 0.18.0, December 4, 2025
 

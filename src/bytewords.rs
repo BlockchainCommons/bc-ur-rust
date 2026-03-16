@@ -33,6 +33,51 @@ pub fn decode(data: &str, style: Style) -> Result<Vec<u8>> {
     Ok(ur::bytewords::decode(data, style)?)
 }
 
+/// Returns `true` if `emoji` is one of the 256 bytemojis.
+#[must_use]
+pub fn is_valid_bytemoji(emoji: &str) -> bool {
+    BYTEMOJIS.contains(&emoji)
+}
+
+/// Canonicalizes a byteword token (2–4 ASCII letters, case-insensitive) to its
+/// full 4-letter lowercase form. Returns `None` if the token is not a valid
+/// byteword or any of its short forms.
+#[must_use]
+pub fn canonicalize_byteword(token: &str) -> Option<String> {
+    use std::sync::LazyLock;
+
+    static WORD_SET: LazyLock<std::collections::HashSet<&'static str>> =
+        LazyLock::new(|| BYTEWORDS.iter().copied().collect());
+    static FIRST_LAST: LazyLock<std::collections::HashMap<String, &'static str>> =
+        LazyLock::new(|| {
+            BYTEWORDS.iter().map(|w| {
+                let bytes = w.as_bytes();
+                let key = format!("{}{}", bytes[0] as char, bytes[bytes.len() - 1] as char);
+                (key, *w)
+            }).collect()
+        });
+    static FIRST_THREE: LazyLock<std::collections::HashMap<&'static str, &'static str>> =
+        LazyLock::new(|| BYTEWORDS.iter().map(|w| (&w[..3], *w)).collect());
+    static LAST_THREE: LazyLock<std::collections::HashMap<&'static str, &'static str>> =
+        LazyLock::new(|| BYTEWORDS.iter().map(|w| (&w[1..], *w)).collect());
+
+    let lower = token.to_ascii_lowercase();
+    match lower.len() {
+        4 => {
+            if WORD_SET.contains(lower.as_str()) {
+                Some(lower)
+            } else {
+                None
+            }
+        }
+        2 => FIRST_LAST.get(&lower).map(|w| w.to_string()),
+        3 => FIRST_THREE.get(lower.as_str())
+            .or_else(|| LAST_THREE.get(lower.as_str()))
+            .map(|w| w.to_string()),
+        _ => None,
+    }
+}
+
 pub const BYTEWORDS: [&str; 256] = [
     "able", "acid", "also", "apex", "aqua", "arch", "atom", "aunt", "away",
     "axis", "back", "bald", "barn", "belt", "beta", "bias", "blue", "body",

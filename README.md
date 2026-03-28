@@ -18,7 +18,7 @@ This crate does not currenly provide opinionated affordances for multi-part URs 
 
 ```toml
 [dependencies]
-bc-ur = "0.19.1"
+bc-ur = "0.19.2"
 ```
 
 ## Specification
@@ -33,6 +33,15 @@ Higher-level Blockchain Commons projects that use this crate include:
 - [Gordian Envelope](https://crates.io/crates/bc-envelope)
 
 ## Version History
+
+### 0.19.2, March 28, 2026
+
+- Add `encode_to_words()` for encoding arbitrary byte slices as space-separated bytewords.
+- Add `encode_to_bytemojis()` for encoding arbitrary byte slices as space-separated bytemojis.
+- Add `encode_to_minimal_bytewords()` for encoding arbitrary byte slices as minimal bytewords (first+last letter concatenated).
+- Refactor `identifier()` and `bytemoji_identifier()` to use the new generalized functions.
+- Add comprehensive tests for the new encoding functions.
+- Format.
 
 ### 0.19.1, March 16, 2026
 

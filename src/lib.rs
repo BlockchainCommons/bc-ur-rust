@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/bc-ur/0.19.1")]
+#![doc(html_root_url = "https://docs.rs/bc-ur/0.19.2")]
 #![warn(rust_2018_idioms)]
 
 //! # Blockchain Commons Uniform Resources ("UR") for Rust

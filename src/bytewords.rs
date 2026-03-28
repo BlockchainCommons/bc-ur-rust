@@ -43,9 +43,7 @@ pub fn encode_to_minimal_bytewords(data: &[u8]) -> String {
 /// Encodes a 4-byte slice of data as a string of bytewords for identification
 /// purposes.
 #[must_use]
-pub fn identifier(data: &[u8; 4]) -> String {
-    encode_to_words(data)
-}
+pub fn identifier(data: &[u8; 4]) -> String { encode_to_words(data) }
 
 /// Encodes a 4-byte slice of data as a string of bytemojis for identification
 /// purposes.
@@ -60,9 +58,7 @@ pub fn decode(data: &str, style: Style) -> Result<Vec<u8>> {
 
 /// Returns `true` if `emoji` is one of the 256 bytemojis.
 #[must_use]
-pub fn is_valid_bytemoji(emoji: &str) -> bool {
-    BYTEMOJIS.contains(&emoji)
-}
+pub fn is_valid_bytemoji(emoji: &str) -> bool { BYTEMOJIS.contains(&emoji) }
 
 /// Canonicalizes a byteword token (2–4 ASCII letters, case-insensitive) to its
 /// full 4-letter lowercase form. Returns `None` if the token is not a valid
@@ -73,18 +69,28 @@ pub fn canonicalize_byteword(token: &str) -> Option<String> {
 
     static WORD_SET: LazyLock<std::collections::HashSet<&'static str>> =
         LazyLock::new(|| BYTEWORDS.iter().copied().collect());
-    static FIRST_LAST: LazyLock<std::collections::HashMap<String, &'static str>> =
-        LazyLock::new(|| {
-            BYTEWORDS.iter().map(|w| {
+    static FIRST_LAST: LazyLock<
+        std::collections::HashMap<String, &'static str>,
+    > = LazyLock::new(|| {
+        BYTEWORDS
+            .iter()
+            .map(|w| {
                 let bytes = w.as_bytes();
-                let key = format!("{}{}", bytes[0] as char, bytes[bytes.len() - 1] as char);
+                let key = format!(
+                    "{}{}",
+                    bytes[0] as char,
+                    bytes[bytes.len() - 1] as char
+                );
                 (key, *w)
-            }).collect()
-        });
-    static FIRST_THREE: LazyLock<std::collections::HashMap<&'static str, &'static str>> =
-        LazyLock::new(|| BYTEWORDS.iter().map(|w| (&w[..3], *w)).collect());
-    static LAST_THREE: LazyLock<std::collections::HashMap<&'static str, &'static str>> =
-        LazyLock::new(|| BYTEWORDS.iter().map(|w| (&w[1..], *w)).collect());
+            })
+            .collect()
+    });
+    static FIRST_THREE: LazyLock<
+        std::collections::HashMap<&'static str, &'static str>,
+    > = LazyLock::new(|| BYTEWORDS.iter().map(|w| (&w[..3], *w)).collect());
+    static LAST_THREE: LazyLock<
+        std::collections::HashMap<&'static str, &'static str>,
+    > = LazyLock::new(|| BYTEWORDS.iter().map(|w| (&w[1..], *w)).collect());
 
     let lower = token.to_ascii_lowercase();
     match lower.len() {
@@ -96,7 +102,8 @@ pub fn canonicalize_byteword(token: &str) -> Option<String> {
             }
         }
         2 => FIRST_LAST.get(&lower).map(|w| w.to_string()),
-        3 => FIRST_THREE.get(lower.as_str())
+        3 => FIRST_THREE
+            .get(lower.as_str())
             .or_else(|| LAST_THREE.get(lower.as_str()))
             .map(|w| w.to_string()),
         _ => None,
@@ -208,10 +215,7 @@ mod tests {
     fn test_encode_to_words_various_lengths() {
         assert_eq!(encode_to_words(&[0]), "able");
         assert_eq!(encode_to_words(&[0, 255]), "able zoom");
-        assert_eq!(
-            encode_to_words(&[0, 1, 2, 3]),
-            "able acid also apex"
-        );
+        assert_eq!(encode_to_words(&[0, 1, 2, 3]), "able acid also apex");
         let eight: [u8; 8] = [0, 1, 2, 3, 4, 5, 6, 7];
         let encoded = encode_to_words(&eight);
         let words: Vec<&str> = encoded.split(' ').collect();
@@ -230,7 +234,11 @@ mod tests {
         let words: Vec<&str> = encoded.split(' ').collect();
         assert_eq!(words.len(), 256);
         let unique: std::collections::HashSet<&&str> = words.iter().collect();
-        assert_eq!(unique.len(), 256, "All 256 byte values must map to distinct words");
+        assert_eq!(
+            unique.len(),
+            256,
+            "All 256 byte values must map to distinct words"
+        );
     }
 
     #[test]
@@ -257,7 +265,8 @@ mod tests {
             let word = BYTEWORDS[b as usize];
             let minimal = encode_to_minimal_bytewords(&[b]);
             let wb = word.as_bytes();
-            let expected = format!("{}{}", wb[0] as char, wb[wb.len() - 1] as char);
+            let expected =
+                format!("{}{}", wb[0] as char, wb[wb.len() - 1] as char);
             assert_eq!(minimal, expected, "byte {b}: word={word}");
         }
     }

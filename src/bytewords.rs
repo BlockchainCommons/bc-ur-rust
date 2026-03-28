@@ -7,26 +7,36 @@ pub fn encode(data: impl AsRef<[u8]>, style: Style) -> String {
     ur::bytewords::encode(data.as_ref(), style)
 }
 
+/// Encodes an arbitrary byte slice as a string of space-separated bytewords.
+#[must_use]
+pub fn encode_to_words(data: &[u8]) -> String {
+    data.iter()
+        .map(|&b| BYTEWORDS[b as usize])
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
+/// Encodes an arbitrary byte slice as a string of space-separated bytemojis.
+#[must_use]
+pub fn encode_to_bytemojis(data: &[u8]) -> String {
+    data.iter()
+        .map(|&b| BYTEMOJIS[b as usize])
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
 /// Encodes a 4-byte slice of data as a string of bytewords for identification
 /// purposes.
 #[must_use]
 pub fn identifier(data: &[u8; 4]) -> String {
-    let data = data.iter();
-    let words: Vec<&str> = data
-        .map(|&b| BYTEWORDS.get(b as usize).copied().unwrap())
-        .collect();
-    words.join(" ")
+    encode_to_words(data)
 }
 
 /// Encodes a 4-byte slice of data as a string of bytemojis for identification
 /// purposes.
 #[must_use]
 pub fn bytemoji_identifier(data: &[u8; 4]) -> String {
-    let data = data.iter();
-    let words: Vec<&str> = data
-        .map(|&b| BYTEMOJIS.get(b as usize).copied().unwrap())
-        .collect();
-    words.join(" ")
+    encode_to_bytemojis(data)
 }
 
 pub fn decode(data: &str, style: Style) -> Result<Vec<u8>> {
@@ -165,5 +175,55 @@ mod tests {
             println!("{}  : {},", bytemoji, len);
         }
         assert!(over_length.is_empty(), "Some bytemojis are over 4 bytes");
+    }
+
+    #[test]
+    fn test_encode_to_words_matches_identifier() {
+        let data: [u8; 4] = [0, 1, 2, 3];
+        assert_eq!(encode_to_words(&data), identifier(&data));
+    }
+
+    #[test]
+    fn test_encode_to_bytemojis_matches_bytemoji_identifier() {
+        let data: [u8; 4] = [0, 1, 2, 3];
+        assert_eq!(encode_to_bytemojis(&data), bytemoji_identifier(&data));
+    }
+
+    #[test]
+    fn test_encode_to_words_various_lengths() {
+        assert_eq!(encode_to_words(&[0]), "able");
+        assert_eq!(encode_to_words(&[0, 255]), "able zoom");
+        assert_eq!(
+            encode_to_words(&[0, 1, 2, 3]),
+            "able acid also apex"
+        );
+        let eight: [u8; 8] = [0, 1, 2, 3, 4, 5, 6, 7];
+        let encoded = encode_to_words(&eight);
+        let words: Vec<&str> = encoded.split(' ').collect();
+        assert_eq!(words.len(), 8);
+    }
+
+    #[test]
+    fn test_encode_to_words_empty() {
+        assert_eq!(encode_to_words(&[]), "");
+    }
+
+    #[test]
+    fn test_encode_to_words_all_bytes_unique() {
+        let all_bytes: Vec<u8> = (0..=255).collect();
+        let encoded = encode_to_words(&all_bytes);
+        let words: Vec<&str> = encoded.split(' ').collect();
+        assert_eq!(words.len(), 256);
+        let unique: std::collections::HashSet<&&str> = words.iter().collect();
+        assert_eq!(unique.len(), 256, "All 256 byte values must map to distinct words");
+    }
+
+    #[test]
+    fn test_encode_to_bytemojis_various_lengths() {
+        assert_eq!(encode_to_bytemojis(&[0]), "😀");
+        let eight: [u8; 8] = [0, 1, 2, 3, 4, 5, 6, 7];
+        let encoded = encode_to_bytemojis(&eight);
+        let emojis: Vec<&str> = encoded.split(' ').collect();
+        assert_eq!(emojis.len(), 8);
     }
 }

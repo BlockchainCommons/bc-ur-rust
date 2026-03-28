@@ -25,6 +25,21 @@ pub fn encode_to_bytemojis(data: &[u8]) -> String {
         .join(" ")
 }
 
+/// Encodes an arbitrary byte slice as minimal bytewords (first+last letter of
+/// each word, concatenated without separator).
+#[must_use]
+pub fn encode_to_minimal_bytewords(data: &[u8]) -> String {
+    data.iter()
+        .map(|&b| {
+            let w = BYTEWORDS[b as usize].as_bytes();
+            let mut s = String::with_capacity(2);
+            s.push(w[0] as char);
+            s.push(w[w.len() - 1] as char);
+            s
+        })
+        .collect::<String>()
+}
+
 /// Encodes a 4-byte slice of data as a string of bytewords for identification
 /// purposes.
 #[must_use]
@@ -225,5 +240,25 @@ mod tests {
         let encoded = encode_to_bytemojis(&eight);
         let emojis: Vec<&str> = encoded.split(' ').collect();
         assert_eq!(emojis.len(), 8);
+    }
+
+    #[test]
+    fn test_encode_to_minimal_bytewords() {
+        // "able" → "ae", "acid" → "ad", "also" → "ao", "apex" → "ax"
+        assert_eq!(encode_to_minimal_bytewords(&[0, 1, 2, 3]), "aeadaoax");
+        assert_eq!(encode_to_minimal_bytewords(&[0]), "ae");
+        assert_eq!(encode_to_minimal_bytewords(&[]), "");
+    }
+
+    #[test]
+    fn test_encode_to_minimal_bytewords_matches_words() {
+        // Each minimal is first+last letter of the corresponding full word
+        for b in 0..=255u8 {
+            let word = BYTEWORDS[b as usize];
+            let minimal = encode_to_minimal_bytewords(&[b]);
+            let wb = word.as_bytes();
+            let expected = format!("{}{}", wb[0] as char, wb[wb.len() - 1] as char);
+            assert_eq!(minimal, expected, "byte {b}: word={word}");
+        }
     }
 }
